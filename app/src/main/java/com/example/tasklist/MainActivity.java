@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             TextView viewTags;
             TextView viewDificuldade;
             TextView viewUpdated;
+            TextView viewDeadline;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 viewTags = itemView.findViewById(R.id.textItemTags);
                 viewDificuldade = itemView.findViewById(R.id.textItemDificuldade);
                 viewUpdated = itemView.findViewById(R.id.textItemUpdated);
+                viewDeadline = itemView.findViewById(R.id.textItemDeadline);
             }
 
             void setData(Tarefa tarefa){
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 viewEstado.setText(com.example.tasklist.Tarefa.EstadoMap.get(tarefa.estado));
                 viewTags.setText(tarefa.tags);
                 viewUpdated.setText(tarefa.dataAtualizado);
+                viewDeadline.setText(tarefa.dataLimite);
             }
 
             @Override

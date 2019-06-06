@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/textItemTitulo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="18dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
         android:text="Titulo"
@@ -36,24 +36,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:text="Estado"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textItemTitulo" />
 
     <TextView
         android:id="@+id/textItemTags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_width="321dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:minHeight="10dp"
+        android:minHeight="5dp"
         android:text="Tags"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/buttonRemover"
+        app:layout_constraintHorizontal_bias="0.153"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonRemover" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonRemover"
@@ -94,10 +94,28 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginEnd="4dp"
         android:text="Última Atualização: "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textItemUpdated"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Limite:"
+        app:layout_constraintEnd_toStartOf="@+id/textItemDeadline"
         app:layout_constraintTop_toBottomOf="@+id/textItemDificuldade" />
+
+    <TextView
+        android:id="@+id/textItemDeadline"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:text="deadline"
+        app:layout_constraintBottom_toTopOf="@+id/textItemUpdated"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
