@@ -27,18 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private final TAdapter tAdapter = new TAdapter();
     private ArrayList<Tarefa> tarefas = new ArrayList<>();
-    private TarefaDBHelper dbHelper;
-    /*
-    private Tarefa createTarefa() {
-        Tarefa t = new Tarefa();
-        t.titulo = "AAAA";
-        t.descricao = "BBBBB";
-        t.tags = "CCCCC";
-        t.dificuldade = 3;
-        t.estado = com.example.tasklist.Tarefa.Estado.AFazer;
-        return t;
-    }
-    */
+    public TarefaDBHelper dbHelper;
+
 
     private void queryTarefas() {
         dbHelper = new TarefaDBHelper(this);
@@ -104,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             View view = infl.inflate(R.layout.item_tasklist, viewGroup, false);
             ViewHolder holder = new ViewHolder(view);
             view.findViewById(R.id.buttonRemover).setOnClickListener(holder);
+            view.findViewById(R.id.buttonItemEdit).setOnClickListener(holder);
             return holder;
         }
 
@@ -148,12 +139,22 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                String selection = Contract.TarefaColumns._ID + " = ?";
-                String[] args = { tarefa.id };
-                db.delete(Contract.TarefaColumns.TABLE_NAME, selection, args);
-                queryTarefas();
-                Toast.makeText(getApplicationContext(), "Tarefa removida!", Toast.LENGTH_SHORT).show();
+                switch(v.getId()) {
+                    case R.id.buttonRemover:
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        String selection = Contract.TarefaColumns._ID + " = ?";
+                        String[] args = { tarefa.id };
+                        db.delete(Contract.TarefaColumns.TABLE_NAME, selection, args);
+                        queryTarefas();
+                        Toast.makeText(getApplicationContext(), "Tarefa removida!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.buttonItemEdit:
+                        Intent intent = new Intent(MainActivity.this, NovaTarefaActivity.class);
+                        intent.putExtra("id", tarefa.id);
+                        startActivityForResult(intent, RESULT_NOVO);
+                        break;
+                }
+
             }
         }
     }

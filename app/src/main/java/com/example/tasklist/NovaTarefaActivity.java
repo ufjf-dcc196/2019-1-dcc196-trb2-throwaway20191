@@ -2,6 +2,8 @@ package com.example.tasklist;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,15 +22,53 @@ import java.time.format.DateTimeFormatter;
 
 public class NovaTarefaActivity  extends AppCompatActivity {
 
+    Tarefa tarefa;
+
+    void restoreData(String id) {
+        TarefaDBHelper helper = new TarefaDBHelper(this);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] columns = {
+                Contract.TarefaColumns._ID,
+                Contract.TarefaColumns.COLUMN_TITULO,
+                Contract.TarefaColumns.COLUMN_DIFICULDADE,
+                Contract.TarefaColumns.COLUMN_ESTADO,
+                Contract.TarefaColumns.COLUMN_DEADLINE,
+                Contract.TarefaColumns.COLUMN_TAGS,
+                Contract.TarefaColumns.COLUMN_DESCRICAO,
+                Contract.TarefaColumns.COLUMN_UPDATED
+        };
+        String selection = Contract.TarefaColumns._ID + " = ?";
+        String[] args = { id };
+        Cursor c = db.query(Contract.TarefaColumns.TABLE_NAME, columns, selection, args, null, null, null, null);
+        if (!c.moveToNext()) {
+            Log.i("TAREFA", "Could not find row with id " + id);
+            return;
+        }
+        tarefa = Contract.TarefaFromCursor(c);
+
+        ((TextView)findViewById(R.id.textNovoTitulo)).setText(tarefa.titulo);
+        ((TextView)findViewById(R.id.textNovoDescricao)).setText(tarefa.descricao);
+        ((RatingBar)findViewById(R.id.ratingNovaDificuldade)).setRating(tarefa.dificuldade);
+        ((Spinner)findViewById(R.id.spinnerNovoEstado)).setSelection(tarefa.estado.ordinal());
+        String[] parts = tarefa.dataLimite.split(" ");
+        ((TextView)findViewById(R.id.textNovoDataLimite)).setText(parts[0]);
+        ((TextView)findViewById(R.id.textNovoHoraLimite)).setText(parts[1]);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nova_tarefa);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerNovoEstado);
+        Spinner spinner = findViewById(R.id.spinnerNovoEstado);
         ArrayAdapter<String> adapter =  new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, com.example.tasklist.Tarefa.EstadoMap.values().toArray(new String[0]));
         spinner.setAdapter(adapter);
+
+        String id = getIntent().getStringExtra("id");
+        if (id != null) {
+            restoreData(id);
+        }
     }
 
     @Override
@@ -57,12 +97,21 @@ public class NovaTarefaActivity  extends AppCompatActivity {
                 values.put(Contract.TarefaColumns.COLUMN_DESCRICAO, descricao);
                 values.put(Contract.TarefaColumns.COLUMN_DIFICULDADE, dificuldade);
                 values.put(Contract.TarefaColumns.COLUMN_ESTADO, estado.name());
-                values.put(Contract.TarefaColumns.COLUMN_DEADLINE, dataLimite + "_" + horaLimite);
+                values.put(Contract.TarefaColumns.COLUMN_DEADLINE, dataLimite + " " + horaLimite);
                 values.put(Contract.TarefaColumns.COLUMN_UPDATED, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-                long id = db.insert(Contract.TarefaColumns.TABLE_NAME, null, values);
-                Toast.makeText(this,"Nova Tarefa adicionada com sucesso!", Toast.LENGTH_LONG).show();
-                Log.i("TAREFA", "Nova tarefa com id: " + id);
-                //Intent intent = new Intent();
+
+                String feedback;
+                if (tarefa != null) {
+                    String where = Contract.TarefaColumns._ID + " = ?";
+                    String[] args = { tarefa.id };
+                    db.update(Contract.TarefaColumns.TABLE_NAME, values, where, args);
+                    feedback = "atualizada";
+                }
+                else {
+                    long id = db.insert(Contract.TarefaColumns.TABLE_NAME, null, values);
+                    feedback = "adicionada";
+                }
+                Toast.makeText(this,"Tarefa " + feedback + " com sucesso!", Toast.LENGTH_LONG).show();
                 setResult(Activity.RESULT_OK);
                 finish();
 

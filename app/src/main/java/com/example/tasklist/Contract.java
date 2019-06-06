@@ -1,6 +1,7 @@
 package com.example.tasklist;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 public class Contract {
@@ -43,6 +44,4 @@ public class Contract {
         Tarefa.Estado estado = Tarefa.Estado.valueOf(estadoStr);
         return new Tarefa(id, titulo, descricao, estado, dificuldade, tags, deadline, lastUpdate);
     }
-
-
 }
