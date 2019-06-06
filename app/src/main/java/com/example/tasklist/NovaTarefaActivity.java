@@ -58,7 +58,7 @@ public class NovaTarefaActivity  extends AppCompatActivity {
                 values.put(Contract.TarefaColumns.COLUMN_DIFICULDADE, dificuldade);
                 values.put(Contract.TarefaColumns.COLUMN_ESTADO, estado.name());
                 values.put(Contract.TarefaColumns.COLUMN_DEADLINE, dataLimite + "_" + horaLimite);
-                values.put(Contract.TarefaColumns.COLUMN_UPDATED, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy_HH:mm")));
+                values.put(Contract.TarefaColumns.COLUMN_UPDATED, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 long id = db.insert(Contract.TarefaColumns.TABLE_NAME, null, values);
                 Toast.makeText(this,"Nova Tarefa adicionada com sucesso!", Toast.LENGTH_LONG).show();
                 Log.i("TAREFA", "Nova tarefa com id: " + id);

@@ -6,35 +6,37 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="5dp"
     android:layout_marginBottom="5dp"
-    android:background="@android:color/holo_green_dark"
-    tools:background="@color/item_bg">
+    android:background="@color/item_bg">
 
     <TextView
         android:id="@+id/textItemTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
         android:text="Titulo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textItemTags" />
 
     <TextView
         android:id="@+id/textItemDificuldade"
         android:layout_width="wrap_content"
         android:layout_height="26dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="36dp"
-        android:text="Dificuldade"
+        android:layout_marginEnd="8dp"
+        android:text="Stars"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.775"
+        app:layout_constraintStart_toEndOf="@+id/textItemTitulo"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
         android:id="@+id/textItemEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         android:text="Estado"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textItemTitulo" />
@@ -44,40 +46,58 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:minHeight="10dp"
         android:text="Tags"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textItemEstado"
-        app:layout_constraintVertical_bias="0.888" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonRemover" />
 
     <Button
         android:id="@+id/buttonRemover"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="99dp"
-        android:layout_height="44dp"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="35dp"
+        android:layout_height="33dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="Remover"
-        app:layout_constraintBottom_toTopOf="@+id/textItemTags"
+        android:layout_marginEnd="4dp"
+        android:text="X"
+        android:textColor="@color/colorAccent"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textItemDificuldade"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
         android:text="Dificuldade"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.841"
+        app:layout_constraintStart_toEndOf="@+id/textItemTitulo"
+        app:layout_constraintTop_toBottomOf="@+id/textItemTags" />
+
+    <TextView
+        android:id="@+id/textItemUpdated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="updatedAt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Última Atualização: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textItemUpdated"
+        app:layout_constraintTop_toBottomOf="@+id/textItemDificuldade" />
 
 </android.support.constraint.ConstraintLayout>

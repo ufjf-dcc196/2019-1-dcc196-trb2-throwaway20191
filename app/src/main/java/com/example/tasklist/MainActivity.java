@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             TextView viewEstado;
             TextView viewTags;
             TextView viewDificuldade;
+            TextView viewUpdated;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 viewEstado = itemView.findViewById(R.id.textItemEstado);
                 viewTags = itemView.findViewById(R.id.textItemTags);
                 viewDificuldade = itemView.findViewById(R.id.textItemDificuldade);
+                viewUpdated = itemView.findViewById(R.id.textItemUpdated);
             }
 
             void setData(Tarefa tarefa){
@@ -138,11 +140,11 @@ public class MainActivity extends AppCompatActivity {
                 viewDificuldade.setText(tarefa.stars());
                 viewEstado.setText(com.example.tasklist.Tarefa.EstadoMap.get(tarefa.estado));
                 viewTags.setText(tarefa.tags);
+                viewUpdated.setText(tarefa.dataAtualizado);
             }
 
             @Override
             public void onClick(View v) {
-                Log.i("TAREFA", "onClick");
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 String selection = Contract.TarefaColumns._ID + " = ?";
                 String[] args = { tarefa.id };
