@@ -3,6 +3,7 @@ package com.example.tasklist;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class TarefaDBHelper extends SQLiteOpenHelper {
 
@@ -15,6 +16,7 @@ public class TarefaDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.i("TAREFA", Contract.SQL_CREATE);
         db.execSQL(Contract.SQL_CREATE);
     }
 

@@ -28,6 +28,16 @@ public class Tarefa {
         Concluida
     }
 
+    public static Estado estadoFromString(String estadoString) {
+        for(Estado estado : EstadoMap.keySet()) {
+            if (EstadoMap.get(estado).equals(estadoString)) {
+                return estado;
+            }
+        }
+        System.out.println("Something went wrong");
+        return Estado.Bloqueada;
+    }
+
     public String stars() {
         StringBuilder result = new StringBuilder();
         int i;
