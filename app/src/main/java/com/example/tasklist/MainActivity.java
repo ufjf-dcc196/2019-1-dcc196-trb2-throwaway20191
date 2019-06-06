@@ -1,6 +1,7 @@
 package com.example.tasklist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.rvTarefas);
         rv.setAdapter(tAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
+
+        Button newButton = findViewById(R.id.buttonNovaTarefa);
+        newButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, NovaTarefaActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
