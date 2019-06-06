@@ -1,7 +1,7 @@
 package com.example.tasklist;
 
+import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +15,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class NovaTarefaActivity  extends AppCompatActivity {
 
@@ -30,7 +27,7 @@ public class NovaTarefaActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_nova_tarefa);
 
         Spinner spinner = (Spinner) findViewById(R.id.spinnerNovoEstado);
-        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Tarefa.EstadoMap.values().toArray(new String[0]));
+        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, com.example.tasklist.Tarefa.EstadoMap.values().toArray(new String[0]));
         spinner.setAdapter(adapter);
     }
 
@@ -47,11 +44,11 @@ public class NovaTarefaActivity  extends AppCompatActivity {
             case R.id.action_save_nova_tarefa:
                 String titulo = ((TextView)findViewById(R.id.textNovoTitulo)).getText().toString();
                 String descricao = ((TextView)findViewById(R.id.textNovoDescricao)).getText().toString();
-                int dificuldade = ((RatingBar)findViewById(R.id.ratingNovaDificuldade)).getNumStars();
-                String estadoText = ((TextView)findViewById(R.id.textNovoTitulo)).getText().toString();
+                int dificuldade = (int)((RatingBar)findViewById(R.id.ratingNovaDificuldade)).getRating();
+                String estadoText = ((Spinner)findViewById(R.id.spinnerNovoEstado)).getSelectedItem().toString();
                 Tarefa.Estado estado = Tarefa.estadoFromString(estadoText);
-                String dataLimite = ((TextView)findViewById(R.id.textNovoTitulo)).getText().toString();
-                String horaLimite = ((TextView)findViewById(R.id.textNovoTitulo)).getText().toString();
+                String dataLimite = ((TextView)findViewById(R.id.textNovoDataLimite)).getText().toString();
+                String horaLimite = ((TextView)findViewById(R.id.textNovoHoraLimite)).getText().toString();
 
                 TarefaDBHelper dbHelper = new TarefaDBHelper(this);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -66,6 +63,7 @@ public class NovaTarefaActivity  extends AppCompatActivity {
                 Toast.makeText(this,"Nova Tarefa adicionada com sucesso!", Toast.LENGTH_LONG).show();
                 Log.i("TAREFA", "Nova tarefa com id: " + id);
                 //Intent intent = new Intent();
+                setResult(Activity.RESULT_OK);
                 finish();
 
             default:

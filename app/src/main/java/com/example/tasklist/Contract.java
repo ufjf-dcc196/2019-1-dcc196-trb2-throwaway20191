@@ -1,5 +1,6 @@
 package com.example.tasklist;
 
+import android.database.Cursor;
 import android.provider.BaseColumns;
 
 public class Contract {
@@ -27,6 +28,20 @@ public class Contract {
         public static final String COLUMN_TAGS = "tags";
         public static final String COLUMN_DEADLINE = "deadline";
         public static final String COLUMN_UPDATED = "time_updated";
+    }
+
+    public static Tarefa TarefaFromCursor(Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndex(TarefaColumns._ID));
+        String titulo = cursor.getString(cursor.getColumnIndex(TarefaColumns.COLUMN_TITULO));
+        String descricao = cursor.getString(cursor.getColumnIndex(TarefaColumns.COLUMN_DESCRICAO));
+        String estadoStr = cursor.getString(cursor.getColumnIndex(TarefaColumns.COLUMN_ESTADO));
+        int dificuldade = cursor.getInt(cursor.getColumnIndex(TarefaColumns.COLUMN_DIFICULDADE));
+        String tags = cursor.getString(cursor.getColumnIndex(TarefaColumns.COLUMN_TAGS));
+        String deadline = cursor.getString(cursor.getColumnIndex(TarefaColumns.COLUMN_DEADLINE));
+        String lastUpdate = cursor.getString(cursor.getColumnIndex(TarefaColumns.COLUMN_UPDATED));
+
+        Tarefa.Estado estado = Tarefa.Estado.valueOf(estadoStr);
+        return new Tarefa(id, titulo, descricao, estado, dificuldade, tags, deadline, lastUpdate);
     }
 
 
