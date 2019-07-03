@@ -8,4 +8,10 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="Salvar"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_edit_tags"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:title="Editar Tags"
+        app:showAsAction="ifRoom" />
 </menu>

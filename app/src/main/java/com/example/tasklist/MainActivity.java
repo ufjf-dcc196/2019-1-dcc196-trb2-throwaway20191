@@ -13,6 +13,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -63,14 +66,24 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(tAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        Button newButton = findViewById(R.id.buttonNovaTarefa);
-        newButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_nova_tarefa, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_create_nova_tarefa:
                 Intent intent = new Intent(MainActivity.this, NovaTarefaActivity.class);
                 startActivityForResult(intent, RESULT_NOVO);
-            }
-        });
+                break;
+        }
+        return true;
     }
 
     @Override

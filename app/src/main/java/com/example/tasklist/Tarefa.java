@@ -17,6 +17,8 @@ public class Tarefa {
     public String dataLimite;
     public String dataAtualizado;
 
+    public Tarefa(){}
+
     public Tarefa(String id, String titulo, String descricao, Estado estado, int dificuldade, String tags, String dataLimite, String dataAtualizado) {
         this.id = id;
         this.titulo = titulo;

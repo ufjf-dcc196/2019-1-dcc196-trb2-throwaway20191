@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class NovaTarefaActivity  extends AppCompatActivity {
+
+    private final int RESULT_OK = 1;
 
     Tarefa tarefa;
 
@@ -69,6 +72,9 @@ public class NovaTarefaActivity  extends AppCompatActivity {
         if (id != null) {
             restoreData(id);
         }
+        else {
+            tarefa = new Tarefa();
+        }
     }
 
     @Override
@@ -97,11 +103,12 @@ public class NovaTarefaActivity  extends AppCompatActivity {
                 values.put(Contract.TarefaColumns.COLUMN_DESCRICAO, descricao);
                 values.put(Contract.TarefaColumns.COLUMN_DIFICULDADE, dificuldade);
                 values.put(Contract.TarefaColumns.COLUMN_ESTADO, estado.name());
+                values.put(Contract.TarefaColumns.COLUMN_TAGS, tarefa.tags);
                 values.put(Contract.TarefaColumns.COLUMN_DEADLINE, dataLimite + " " + horaLimite);
                 values.put(Contract.TarefaColumns.COLUMN_UPDATED, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
 
                 String feedback;
-                if (tarefa != null) {
+                if (!tarefa.id.equals("0")) {
                     String where = Contract.TarefaColumns._ID + " = ?";
                     String[] args = { tarefa.id };
                     db.update(Contract.TarefaColumns.TABLE_NAME, values, where, args);
@@ -114,11 +121,26 @@ public class NovaTarefaActivity  extends AppCompatActivity {
                 Toast.makeText(this,"Tarefa " + feedback + " com sucesso!", Toast.LENGTH_LONG).show();
                 setResult(Activity.RESULT_OK);
                 finish();
-
+                break;
+            case R.id.action_edit_tags:
+                Intent intent = new Intent(NovaTarefaActivity.this, TagActivity.class);
+                intent.putExtra("tags", tarefa.tags);
+                startActivityForResult(intent, RESULT_OK);
             default:
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (Activity.RESULT_OK == resultCode){
+            switch (requestCode){
+                case RESULT_OK:
+                    tarefa.tags = data.getStringExtra("tags");
+                    break;
+            }
+        }
     }
 
 }

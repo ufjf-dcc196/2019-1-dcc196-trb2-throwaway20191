@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NovaTarefaActivity" />
+        <activity android:name=".TagActivity" />
     </application>
 
 </manifest>
