@@ -37,8 +37,12 @@ public class TagActivity extends AppCompatActivity {
 
         String tagString = getIntent().getStringExtra("tags");
         if (tagString != null){
-            tags.addAll(Arrays.asList(tagString.split("|")));
+            tags.addAll(Arrays.asList(tagString.split("\\|")));
         }
+        final TagAdapter adapter = new TagAdapter();
+        final RecyclerView rv = findViewById(R.id.rvTag);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
         final TextView tagEdit = findViewById(R.id.editTagName);
         tagEdit.setOnKeyListener(new View.OnKeyListener() {
@@ -47,14 +51,12 @@ public class TagActivity extends AppCompatActivity {
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     tags.add(tagEdit.getText().toString());
                     tagEdit.setText("");
+                    adapter.notifyDataSetChanged();
                     return true;
                 }
                 return false;
             }
         });
-        RecyclerView rv = findViewById(R.id.rvTag);
-        rv.setAdapter(new TagAdapter());
-        rv.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -67,7 +69,7 @@ public class TagActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_create_nova_tarefa:
+            case R.id.action_save_tags:
                 StringBuilder sb = new StringBuilder("");
                 for(String t : tags) {
                     sb.append(t).append("|");
@@ -89,10 +91,9 @@ public class TagActivity extends AppCompatActivity {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             Context context = viewGroup.getContext();
             LayoutInflater infl = LayoutInflater.from(context);
-            View view = infl.inflate(R.layout.item_tasklist, viewGroup, false);
+            View view = infl.inflate(R.layout.item_taglist, viewGroup, false);
             ViewHolder holder = new ViewHolder(view);
-            view.findViewById(R.id.buttonRemover).setOnClickListener(holder);
-            view.findViewById(R.id.buttonItemEdit).setOnClickListener(holder);
+            view.findViewById(R.id.textItemTag).setOnClickListener(holder);
             return holder;
         }
 
@@ -118,6 +119,7 @@ public class TagActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                     tags.remove(getAdapterPosition());
+                    notifyDataSetChanged();
                 }
             }
         }

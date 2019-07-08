@@ -108,16 +108,17 @@ public class NovaTarefaActivity  extends AppCompatActivity {
                 values.put(Contract.TarefaColumns.COLUMN_UPDATED, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
 
                 String feedback;
-                if (!tarefa.id.equals("0")) {
+                if (tarefa.id == null) {
+                    long id = db.insert(Contract.TarefaColumns.TABLE_NAME, null, values);
+                    feedback = "adicionada";
+                }
+                else {
                     String where = Contract.TarefaColumns._ID + " = ?";
                     String[] args = { tarefa.id };
                     db.update(Contract.TarefaColumns.TABLE_NAME, values, where, args);
                     feedback = "atualizada";
                 }
-                else {
-                    long id = db.insert(Contract.TarefaColumns.TABLE_NAME, null, values);
-                    feedback = "adicionada";
-                }
+                Log.v("TASK", tarefa.tags);
                 Toast.makeText(this,"Tarefa " + feedback + " com sucesso!", Toast.LENGTH_LONG).show();
                 setResult(Activity.RESULT_OK);
                 finish();

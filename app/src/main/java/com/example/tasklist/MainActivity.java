@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,10 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private final int RESULT_NOVO = 1;
+    final int RESULT_NOVO = 1;
 
     private final TAdapter tAdapter = new TAdapter();
     private ArrayList<Tarefa> tarefas = new ArrayList<>();
@@ -46,7 +49,20 @@ public class MainActivity extends AppCompatActivity {
                 Contract.TarefaColumns.COLUMN_DESCRICAO,
                 Contract.TarefaColumns.COLUMN_UPDATED
         };
-        Cursor c = db.query(Contract.TarefaColumns.TABLE_NAME, columns, "", null, null, null, null);
+        String filter = ((TextView)findViewById(R.id.editTextTagFilter)).getText().toString();
+        Cursor c;
+        if (filter.equals("")){
+            c = db.query(Contract.TarefaColumns.TABLE_NAME, columns,  "", null, null, null, null);
+        }
+        else {
+            List<String> filters = Arrays.asList(filter.split("\\|"));
+            String selection = "";
+            for(String f : filters) {
+                selection += "tags like " + "'%"+ f +"%' or ";
+            }
+            selection = selection.substring(0, selection.length() - 4);
+            c = db.query(Contract.TarefaColumns.TABLE_NAME, columns,  selection, null, null, null, null);
+        }
         tarefas = new ArrayList<>();
         while (c.moveToNext()) {
             Tarefa tarefa = Contract.TarefaFromCursor(c);
@@ -60,6 +76,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final TextView tagEdit = findViewById(R.id.editTextTagFilter);
+        tagEdit.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    queryTarefas();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         queryTarefas();
 
         RecyclerView rv = findViewById(R.id.rvTarefas);
@@ -71,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_nova_tarefa, menu);
+        inflater.inflate(R.menu.menu_main_activity, menu);
         return true;
     }
 
@@ -152,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                if (getAdapterPosition() == RecyclerView.NO_POSITION) {
+                    return;
+                }
                 switch(v.getId()) {
                     case R.id.buttonRemover:
                         SQLiteDatabase db = dbHelper.getWritableDatabase();
