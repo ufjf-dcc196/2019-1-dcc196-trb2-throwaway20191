@@ -19,14 +19,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     final int RESULT_NOVO = 1;
@@ -35,9 +40,25 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Tarefa> tarefas = new ArrayList<>();
     public TarefaDBHelper dbHelper;
 
+    private List<String> queryTags() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] columns = {
+                Contract.TarefaColumns.COLUMN_TAGS
+        };
+        Cursor c = db.query(Contract.TarefaColumns.TABLE_NAME, columns,  "", null, null, null, null);
+        StringBuilder sb = new StringBuilder("|");
+        while (c.moveToNext()) {
+            sb.append(c.getString(0) + "|");
+        }
+        Log.i("Task", sb.toString());
+        c.close();
+        List<String> list = Arrays.asList(sb.toString().split("\\|"));
+        Set<String> tags = new HashSet<>(list);
+        return new ArrayList<>(tags);
+    }
 
-    private void queryTarefas() {
-        dbHelper = new TarefaDBHelper(this);
+
+    private void queryTarefas(String filter) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] columns = {
                 Contract.TarefaColumns._ID,
@@ -49,18 +70,12 @@ public class MainActivity extends AppCompatActivity {
                 Contract.TarefaColumns.COLUMN_DESCRICAO,
                 Contract.TarefaColumns.COLUMN_UPDATED
         };
-        String filter = ((TextView)findViewById(R.id.editTextTagFilter)).getText().toString();
         Cursor c;
         if (filter.equals("")){
             c = db.query(Contract.TarefaColumns.TABLE_NAME, columns,  "", null, null, null, null);
         }
         else {
-            List<String> filters = Arrays.asList(filter.split("\\|"));
-            String selection = "";
-            for(String f : filters) {
-                selection += "tags like " + "'%"+ f +"%' or ";
-            }
-            selection = selection.substring(0, selection.length() - 4);
+            String selection = "tags like '%"+ filter + "%'";
             c = db.query(Contract.TarefaColumns.TABLE_NAME, columns,  selection, null, null, null, null);
         }
         tarefas = new ArrayList<>();
@@ -75,24 +90,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        final TextView tagEdit = findViewById(R.id.editTextTagFilter);
-        tagEdit.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    queryTarefas();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        queryTarefas();
+        dbHelper = new TarefaDBHelper(this);
 
         RecyclerView rv = findViewById(R.id.rvTarefas);
         rv.setAdapter(tAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
+
+        final List<String> tags = queryTags();
+        Spinner spinner = findViewById(R.id.spinnerTags);
+        ArrayAdapter<String> adapter =  new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tags);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tag = tags.get(position);
+                queryTarefas(tag);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
@@ -119,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         if (Activity.RESULT_OK == resultCode){
             switch (requestCode){
                 case RESULT_NOVO:
-                    queryTarefas();
+                    queryTarefas("");
                     break;
             }
         }
@@ -189,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                         String selection = Contract.TarefaColumns._ID + " = ?";
                         String[] args = { tarefa.id };
                         db.delete(Contract.TarefaColumns.TABLE_NAME, selection, args);
-                        queryTarefas();
+                        queryTarefas("");
                         Toast.makeText(getApplicationContext(), "Tarefa removida!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.buttonItemEdit:

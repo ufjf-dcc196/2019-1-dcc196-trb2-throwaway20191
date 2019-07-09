@@ -65,7 +65,7 @@ public class NovaTarefaActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_nova_tarefa);
 
         Spinner spinner = findViewById(R.id.spinnerNovoEstado);
-        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, com.example.tasklist.Tarefa.EstadoMap.values().toArray(new String[0]));
+        ArrayAdapter<String> adapter =  new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, com.example.tasklist.Tarefa.EstadoMap.values().toArray(new String[0]));
         spinner.setAdapter(adapter);
 
         String id = getIntent().getStringExtra("id");
@@ -118,7 +118,6 @@ public class NovaTarefaActivity  extends AppCompatActivity {
                     db.update(Contract.TarefaColumns.TABLE_NAME, values, where, args);
                     feedback = "atualizada";
                 }
-                Log.v("TASK", tarefa.tags);
                 Toast.makeText(this,"Tarefa " + feedback + " com sucesso!", Toast.LENGTH_LONG).show();
                 setResult(Activity.RESULT_OK);
                 finish();
